@@ -36,7 +36,7 @@ This script performs the following tasks to capture the database structure:
 - **Extract Properties**: Lists distinct properties associated with each label.
 - **Get Relationships**: Captures all relationships (incoming and outgoing) for each label, including the type of relationship and the labels of connected nodes.
 
-The data is organized in an Excel file, with each label’s data on a separate sheet containing the following columns:
+**The data is organized in an Excel file**, with each label’s data on a separate sheet containing the following columns:
 
 | Column                  | Description                                                                 |
 |-------------------------|-----------------------------------------------------------------------------|
