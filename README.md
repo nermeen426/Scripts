@@ -1,6 +1,6 @@
 # 📝 Neo4j Export Labels, Properties, and Relationships Script
 
-This Python script connects to a Neo4j database and efficiently extracts information about all **node labels**, their **properties**, and **relationships**. This data is saved to a **CSV file** for easy access and further analysis.
+This Python script connects to a Neo4j database and efficiently extracts information about all **node labels**, their **properties**, **relationships**, and **node counts**. The data is saved to a **CSV file** for easy access and further analysis.
 
 ---
 
@@ -9,6 +9,7 @@ This Python script connects to a Neo4j database and efficiently extracts informa
 This script extracts the following details from a Neo4j database:
 
 - **Labels**: All unique node labels in the database.
+- **Node Count**: The number of nodes associated with each label, providing insight into the distribution of nodes.
 - **Properties**: Distinct properties associated with each label.
 - **Relationships**: Both incoming and outgoing relationships for each label, including relationship types and connected node labels.
 
@@ -17,10 +18,11 @@ The data is then structured in a CSV file with the following columns:
 | Column                 | Description                                                                 |
 |------------------------|-----------------------------------------------------------------------------|
 | **Label**              | The node label in Neo4j                                                    |
+| **Node Count**         | The total number of nodes with this label                                  |
 | **Properties**         | List of properties associated with each label                              |
 | **Relationships**      | List of all relationships for each label                                   |
 | **Incoming Relationships** | Types of incoming relationships, including labels of connected nodes |
-| **Outgoing Relationships** | Types of outgoing relationships, including labels of connected nodes |
+| **Outgoing Relationships** | Types of outgoing relationships, including labels of connected nodes | 
 
 # 📊 Extract Neo4j Data to Excel Script
 
