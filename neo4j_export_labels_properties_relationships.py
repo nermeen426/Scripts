@@ -1,15 +1,19 @@
 """
-This Python script connects to a Neo4j database to retrieve information about all node labels, their properties, and relationships. The data extracted from the database includes:
-- Labels: All unique labels in the database.
-- Properties: Distinct properties for each label.
-- Relationships: Both incoming and outgoing relationships associated with each label, including the types of relationships and the labels of connected nodes.
+This Python script connects to a Neo4j database to retrieve detailed information about all node labels, their properties, relationships, and the count of nodes for each label. The extracted data provides a comprehensive view of the database structure, including:
 
-The data is then written to a CSV file with the following columns:
-- Label
-- Properties
-- Relationships
-- Incoming Relationships
-- Outgoing Relationships
+- **Labels**: All unique node labels within the database.
+- **Node Count**: The number of nodes present for each label, helping to understand the distribution of nodes.
+- **Properties**: Distinct properties associated with each label, providing insight into the attributes available across different types of nodes.
+- **Relationships**: Incoming and outgoing relationships for each label, including the type of each relationship and the labels of connected nodes. This allows us to see how nodes of a certain label connect to others within the graph.
+
+After extracting the data, it is written to a CSV file with the following columns:
+
+- **Label**: The unique label for the nodes.
+- **Node Count**: The total count of nodes with this label.
+- **Properties**: A list of unique properties for nodes with this label.
+- **Relationships**: A combined list of incoming and outgoing relationships.
+- **Incoming Relationships**: Relationships where nodes of this label are the target of the relationship.
+- **Outgoing Relationships**: Relationships where nodes of this label are the source of the relationship.
 """
 
 import csv
@@ -27,15 +31,24 @@ password = "your_password_here"
 # Initialize the Neo4j driver
 driver = GraphDatabase.driver(uri, auth=(username, password))
 
-# Function to retrieve all labels in the database
-def get_all_labels():
-    print("Fetching all labels...")
+# Function to retrieve all labels in the database along with node count
+def get_all_labels_with_count():
+    print("Fetching all labels with node counts...")
+    labels_with_counts = []
     try:
         with driver.session() as session:
-            result = session.run("CALL db.labels()")
+            # First, get all labels
+            result = session.run("CALL db.labels() YIELD label")
             labels = [record["label"] for record in result]
-            print(f"Labels found: {labels}")
-            return labels
+            
+            # For each label, count the nodes
+            for label in labels:
+                count_result = session.run(f"MATCH (n:`{label}`) RETURN count(n) AS count")
+                node_count = count_result.single()["count"]
+                labels_with_counts.append({"label": label, "count": node_count})
+            
+            print(f"Labels with counts: {labels_with_counts}")
+            return labels_with_counts
     except Exception as e:
         print(f"Error retrieving labels: {e}")
         return []
