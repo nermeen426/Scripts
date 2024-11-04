@@ -114,7 +114,7 @@ def write_to_csv(data, filename="F:/Etolv/Scripts/database.csv"):
         with open(filename, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             # Updated header with new columns
-            writer.writerow(["Label", "Properties", "Relationships", "Incoming Relationships", "Outgoing Relationships"])
+            writer.writerow(["Label", "Node Count", "Properties", "Relationships", "Incoming Relationships", "Outgoing Relationships"])
             for row in data:
                 print(f"Writing row: {row}")  # Debugging print statement
                 writer.writerow(row)
@@ -125,13 +125,15 @@ def write_to_csv(data, filename="F:/Etolv/Scripts/database.csv"):
 # Main function to process all labels and collect their properties/relationships
 def main():
     print("Starting data extraction...")
-    labels = get_all_labels()
-    if not labels:
+    labels_with_counts = get_all_labels_with_count()
+    if not labels_with_counts:
         print("No labels found in the database.")
         return
 
     data = []
-    for label in labels:
+    for label_info in labels_with_counts:
+        label = label_info["label"]
+        node_count = label_info["count"]
         # Fetch properties for the current label
         properties = get_distinct_properties(label)
         # Fetch incoming and outgoing relationships for the current label
@@ -141,6 +143,7 @@ def main():
         # Prepare the row data to write to CSV
         data.append([
             label,
+            node_count,
             ", ".join(properties),
             ", ".join(all_relationships),
             ", ".join(incoming_relationships),
@@ -156,4 +159,3 @@ if __name__ == "__main__":
     main()
     # Close the Neo4j driver connection
     driver.close()
-
